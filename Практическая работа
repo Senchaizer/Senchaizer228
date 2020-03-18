@@ -1,0 +1,68 @@
+import pygame
+pygame.init()
+ 
+WIN_X = 300
+WIN_Y = 300
+WHITE = (255, 255, 255)
+BLUE = (0, 0, 255)
+RED = (255, 0, 0)
+ 
+def change_color(last):
+    if last: 
+        pygame.draw.circle(sc, BLUE, (WIN_X//2, WIN_Y//2), round((WIN_X+WIN_Y)/5))
+        last = False
+    else:
+        pygame.draw.circle(sc, RED, (WIN_X//2, WIN_Y//2), round((WIN_X+WIN_Y)/5))
+        last = True
+    return last
+ 
+ 
+sc = pygame.display.set_mode((WIN_X, WIN_Y))
+sc.fill(WHITE)
+ 
+rect_tleft = pygame.Rect((0, 0), (WIN_X//2, WIN_Y//2))
+rect_bleft = pygame.Rect((0, WIN_Y//2), (WIN_X//2, WIN_Y//2))
+ 
+rect_tright = pygame.Rect((WIN_X//2, 0), (WIN_X//2, WIN_Y//2))
+rect_bright = pygame.Rect((WIN_X//2, WIN_Y//2), (WIN_X//2, WIN_Y//2))
+ 
+pygame.draw.circle(sc, BLUE, (WIN_X//2, WIN_Y//2), round((WIN_X+WIN_Y)/5))
+ 
+pygame.display.update()
+ 
+active_all = False
+active_leftd = False
+active_rightd = False
+last = True
+ 
+while True:
+    for i in pygame.event.get():
+        if i.type == pygame.QUIT:
+            exit()
+        elif i.type == pygame.KEYDOWN:
+            if i.key == pygame.K_1:
+                print('*changes top-left & bottom-right*')
+                active_leftd = True
+                active_rightd = False
+                active_all = False
+            elif i.key == pygame.K_2:
+                print('*changes top-right & bottom-left*')
+                active_rightd = True
+                active_leftd = False
+                active_all = False
+            elif i.key == pygame.K_0:
+                print('*changes all*')
+                active_all = True
+                active_leftd = False
+                active_rightd = False
+ 
+    last = change_color(last)
+ 
+    if active_all:
+        pygame.display.update()
+    if active_leftd:
+        pygame.display.update((rect_tleft, rect_bright))
+    if active_rightd:
+        pygame.display.update((rect_tright, rect_bleft))
+ 
+    pygame.time.delay(200)
